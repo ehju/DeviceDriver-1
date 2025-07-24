@@ -40,11 +40,22 @@ TEST(DeviceDriver, ReadDifferentValueException) {
 	}
 	catch (ReadFailException& e) {
 		//assert
-		EXPECT_EQ(string{ e.what() }, string{  "ReadFailException" });
+		EXPECT_EQ(string{ e.what() }, string{ "ReadFailException" });
 	}
-
-
 }
+
+TEST(DeviceDriver, ReadBeforeWrite) {
+	MockFlashMemory mock;
+	// precondition : Read value == 0xFF
+	int address = (long)0xFF;
+
+	EXPECT_CALL(mock, read((long)0xB))
+		.Times(1);
+
+	DeviceDriver driver{ &mock };
+	driver.write((long)0xB,7);
+}
+
 
 int main() {
 	::testing::InitGoogleMock();
