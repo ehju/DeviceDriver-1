@@ -1,13 +1,33 @@
 #pragma once
+#include <stdexcept>
 #include "flash_memory_device.h"
 
+
+
+class ReadFailException : public std::exception {
+public:
+	char const* what() const override
+	{
+		return "ReadFailException";
+	}
+};
+class WriteFailException : public std::exception {
+public:
+	char const* what() const override
+	{
+		return "WriteFailException";
+	}
+};
 class DeviceDriver
 {
 public:
     DeviceDriver(FlashMemoryDevice* hardware);
-    int read(long address);
+    virtual int read(long address);
     void write(long address, int data);
 
 protected:
-    FlashMemoryDevice* m_hardware;
+	FlashMemoryDevice* m_hardware;
+private:
+	const int READ_COUNT=5;
+	const int ERASED_PATTERN = (int)0xFF;
 };
