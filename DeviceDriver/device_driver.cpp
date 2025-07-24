@@ -1,3 +1,4 @@
+#include <iostream>
 #include "device_driver.h"
 #include <set>
 
@@ -21,5 +22,10 @@ int DeviceDriver::read(long address)
 void DeviceDriver::write(long address, int data)
 {
     int readData= (int)(m_hardware->read(address));
-    m_hardware->write(address, (unsigned char)data);
+    if (readData == (int)0xFF) {
+        m_hardware->write(address, (unsigned char)data);
+    }
+    else {
+        throw WriteFailException();
+    }
 }

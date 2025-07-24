@@ -45,16 +45,29 @@ TEST(DeviceDriver, ReadDifferentValueException) {
 }
 
 TEST(DeviceDriver, ReadBeforeWrite) {
-	MockFlashMemory mock;
+	NiceMock<MockFlashMemory> mock;
 	// precondition : Read value == 0xFF
 	int address = (long)0xFF;
 
 	EXPECT_CALL(mock, read((long)0xB))
-		.Times(1);
+		.Times(1)
+		.WillRepeatedly(Return((unsigned char)0xFF)); // erased page
 
 	DeviceDriver driver{ &mock };
 	driver.write((long)0xB,7);
 }
+TEST(DeviceDriver, WriteWrittenPageException) {
+	NiceMock<MockFlashMemory> mock;
+	// precondition : Read value == 0xFF
+	int address = (long)0xFF;
+
+	EXPECT_CALL(mock, read((long)0xB))
+		.WillRepeatedly(Return((unsigned char)0x00));
+
+	DeviceDriver driver{ &mock };
+	EXPECT_THROW(driver.write((long)0xB, 7), WriteFailException);
+}
+
 
 
 int main() {

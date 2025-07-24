@@ -11,7 +11,13 @@ public:
 		return "ReadFailException";
 	}
 };
-
+class WriteFailException : public std::exception {
+public:
+	char const* what() const override
+	{
+		return "WriteFailException";
+	}
+};
 class DeviceDriver
 {
 public:
@@ -22,4 +28,5 @@ public:
 protected:
 	FlashMemoryDevice* m_hardware;
 	const int READ_COUNT=5;
+
 };
