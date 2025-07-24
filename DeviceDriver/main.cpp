@@ -26,8 +26,11 @@ TEST(DeviceDriver, ReadDifferentValueException) {
 	MockFlashMemory mock;
 
 	EXPECT_CALL(mock, read(_))
-		.WillOnce(Return(1))
-		.WillRepeatedly(Return(3));
+		.WillOnce(Return((unsigned char)0xA))
+		.WillOnce(Return((unsigned char)0xA))
+		.WillOnce(Return((unsigned char)0xA))
+		.WillOnce(Return((unsigned char)0xA))
+		.WillOnce(Return((unsigned char)0xB));
 
 	DeviceDriver driver{ &mock };
 	//act
@@ -42,8 +45,6 @@ TEST(DeviceDriver, ReadDifferentValueException) {
 
 
 }
-
-
 
 int main() {
 	::testing::InitGoogleMock();
