@@ -20,5 +20,6 @@ public:
     void write(long address, int data);
 
 protected:
-    FlashMemoryDevice* m_hardware;
+	FlashMemoryDevice* m_hardware;
+	const int READ_COUNT=5;
 };
