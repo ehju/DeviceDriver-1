@@ -6,12 +6,17 @@ DeviceDriver::DeviceDriver(FlashMemoryDevice* hardware) : m_hardware(hardware)
 
 int DeviceDriver::read(long address)
 {
-    int ret;
+    int temp, ret;
+    ret =(int)(m_hardware->read(address));
     for (int i = 0;i < 4;i++)
     {
-        ret = (int)(m_hardware->read(address));
+        temp = (int)(m_hardware->read(address));
+        if (temp != ret)
+        {
+            throw ReadFailException();
+        }
     }
-    return (int)(m_hardware->read(address));
+    return ret;
 }
 
 void DeviceDriver::write(long address, int data)

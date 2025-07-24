@@ -2,6 +2,7 @@
 #include "device_driver.h"
 #include <vector>
 
+
 using namespace std;
 using namespace testing;
 class MockFlashMemory : public FlashMemoryDevice {
@@ -19,6 +20,27 @@ TEST(DeviceDriver, ReadFromHW) {
 
 	DeviceDriver driver{ &mock };
 	int data = driver.read(0xFF);
+}
+
+TEST(DeviceDriver, ReadDifferentValueException) {
+	MockFlashMemory mock;
+
+	EXPECT_CALL(mock, read(_))
+		.WillOnce(Return(1))
+		.WillRepeatedly(Return(3));
+
+	DeviceDriver driver{ &mock };
+	//act
+	try {
+		int data = driver.read(0xFF);
+		FAIL(); 
+	}
+	catch (ReadFailException& e) {
+		//assert
+		EXPECT_EQ(string{ e.what() }, string{  "ReadFailException" });
+	}
+
+
 }
 
 
